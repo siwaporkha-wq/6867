@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HERBAVITA | แชมพูสมุนไพรธรรมชาติสูตรเข้มข้น</title>
+    <!-- โหลด Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- โหลด Font ภาษาไทย Prompt & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- โหลด Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Prompt', 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        /* สไตล์สำหรับการสั่งพิมพ์ใบจ่าหน้าพัสดุ */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #print-area, #print-area * {
+                visibility: visible;
+            }
+            #print-area {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+                background: white;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased selection:bg-emerald-200 selection:text-emerald-900">
+
+    <!-- Navbar ด้านบน -->
+    <nav class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-200 shadow-sm no-print">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- โลโก้ร้าน -->
+                <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('store')">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-sm">
+                        <i data-lucide="leaf" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-xl tracking-tight text-emerald-900">HERBAVITA</span>
+                        <span class="hidden sm:inline-block text-xs text-stone-500 ml-1">Natural Hair Care</span>
+                    </div>
+                </div>
+
+                <!-- ปุ่มสลับหน้า หน้าร้านค้า / ระบบหลังบ้าน (Fulfillment) -->
+                <div class="flex items-center gap-2 bg-stone-100 p-1 rounded-xl border border-stone-200">
+                    <button id="btn-tab-store" onclick="switchTab('store')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-white text-emerald-800 shadow-sm">
+                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                        <span>หน้าร้านสั่งซื้อ</span>
+                    </button>
+                    <button id="btn-tab-admin" onclick="switchTab('admin')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all text-stone-600 hover:text-stone-900">
+                        <i data-lucide="package-check" class="w-4 h-4"></i>
+                        <span>หลังบ้าน / แพ็คพัสดุ</span>
+                        <span id="order-badge" class="ml-1 bg-emerald-600 text-white text-xs px-1.5 py-0.5 rounded-full">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===================================================================== -->
+    <!-- ส่วนที่ 1: หน้าร้านค้า (STOREFRONT LANDING PAGE) -->
+    <!-- ===================================================================== -->
+    <main id="view-store" class="no-print">
+        <!-- Hero Section -->
+        <section class="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 text-white py-16 sm:py-24">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <div class="space-y-6 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-700/60 border border-emerald-500/30 text-emerald-100 text-xs sm:text-sm">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i>
+                            <span>สารสกัดสมุนไพรออร์แกนิก 100% ปราศจากซิลิโคนและพาราเบน</span>
+                        </div>
+                        <h1 class="text-3xl sm:text-5xl font-bold leading-tight">
+                            ฟื้นบำรุงรากผมแข็งแรง <br>
+                            <span class="text-emerald-300">ลดผมขาดหลุดร่วง</span> ตั้งแต่ครั้งแรกที่ใช้
+                        </h1>
+                        <p class="text-emerald-100/90 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 font-light">
+                            คัดสรรสุดยอดสมุนไพรไทยและสารสกัดธรรมชาติเข้มข้น 2 สูตรเฉพาะ เพื่อดูแลปัญหาเส้นผมและหนังศีรษะอย่างตรงจุด
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
+                            <a href="#products" class="px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-900 font-semibold shadow-lg shadow-amber-900/20 transition flex items-center justify-center gap-2">
+                                <span>เลือกสูตรแชมพูที่ใช่</span>
+                                <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                            </a>
+                            <a href="#order-form" class="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium transition flex items-center justify-center gap-2">
+                                <span>สั่งซื้อทันที (ส่งฟรี!)</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- ภาพ Hero แสดงสินค้าคู่ -->
+                    <div class="relative flex justify-center">
+                        <div class="w-full max-w-md bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-2xl">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-white rounded-2xl p-3 text-stone-800 shadow-md transform -rotate-2 hover:rotate-0 transition">
+                                    <!-- โหลดรูปจากโฟลเดอร์ ./images/sku1.jpg ใน GitHub พร้อม Fallback -->
+                                    <img src="./images/sku1.jpg" 
+                                         onerror="this.onerror=null; this.src='https://placehold.co/300x360/065f46/ffffff?text=SKU-001%0A%E0%B8%AA%E0%B8%B9%E0%B8%95%E0%B8%A3%E0%B8%A5%E0%B8%94%E0%B8%9C%E0%B8%A1%E0%B8%A3%E0%B9%88%E0%B8%A7%E0%B8%87';" 
+                                         alt="แชมพูสูตรลดผมร่วง" 
+                                         class="w-full h-44 object-cover rounded-xl mb-2 bg-emerald-50">
+                                    <span class="text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">SKU-001</span>
+                                    <p class="font-semibold text-sm mt-1">สูตรลดผมขาดร่วง</p>
+                                    <p class="text-emerald-700 font-bold text-sm">฿290</p>
+                                </div>
+                                <div class="bg-white rounded-2xl p-3 text-stone-800 shadow-md transform rotate-2 hover:rotate-0 transition mt-4">
+                                    <!-- โหลดรูปจากโฟลเดอร์ ./images/sku2.jpg ใน GitHub พร้อม Fallback -->
+                                    <img src="./images/sku2.jpg" 
+                                         onerror="this.onerror=null; this.src='https://placehold.co/300x360/0284c7/ffffff?text=SKU-002%0A%E0%B8%AA%E0%B8%B9%E0%B8%95%E0%B8%A3%E0%B9%80%E0%B8%A2%E0%B9%87%E0%B8%99%E0%B8%82%E0%B8%88%E0%B8%B1%E0%B8%94%E0%B8%A3%E0%B8%B1%E0%B8%87%E0%B9%81%E0%B8%84';" 
+                                         alt="แชมพูสูตรขจัดรังแค" 
+                                         class="w-full h-44 object-cover rounded-xl mb-2 bg-sky-50">
+                                    <span class="text-[11px] font-bold text-sky-700 bg-sky-100 px-2 py-0.5 rounded-md">SKU-002</span>
+                                    <p class="font-semibold text-sm mt-1">สูตรขจัดรังแค เย็นสดชื่น</p>
+                                    <p class="text-sky-700 font-bold text-sm">฿290</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Showcase (2 SKUs) -->
+        <section id="products" class="py-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-2xl sm:text-3xl font-bold text-stone-900">เลือกสูตรแชมพูที่เหมาะกับสภาพผมของคุณ</h2>
+                <p class="text-stone-600 mt-2">ขนาดขวดละ 300 ml. ใช้ได้นาน 1-2 เดือน</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- SKU 1 Card -->
+                <div class="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-sm hover:shadow-xl transition flex flex-col">
+                    <div class="relative bg-emerald-50 h-72 flex items-center justify-center p-6">
+                        <span class="absolute top-4 left-4 bg-emerald-700 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                            รหัสสินค้า: SKU-001
+                        </span>
+                        <span class="absolute top-4 right-4 bg-amber-400 text-stone-900 text-xs font-bold px-3 py-1 rounded-full">
+                            ขายดีอันดับ 1
+                        </span>
+                        <img src="./images/sku1.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/400x400/065f46/ffffff?text=HERBAVITA+SKU-001%0A%E0%B8%AA%E0%B8%B9%E0%B8%95%E0%B8%A3%E0%B8%A5%E0%B8%94%E0%B8%9C%E0%B8%A1%E0%B8%A3%E0%B9%88%E0%B8%A7%E0%B8%87+%E0%B8%9A%E0%B8%B3%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B8%A3%E0%B8%B2%E0%B8%81%E0%B8%9C%E0%B8%A1';" 
+                             alt="SKU-001 แชมพูสูตรลดผมร่วง" 
+                             class="h-full w-auto object-contain rounded-2xl shadow-md">
+                    </div>
+                    <div class="p-6 sm:p-8 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start gap-2">
+                                <h3 class="text-xl font-bold text-stone-900">สูตรลดผมขาดร่วง & บำรุงรากผม</h3>
+                                <div class="text-right">
+                                    <span class="text-2xl font-bold text-emerald-700">฿290</span>
+                                    <span class="block text-xs text-stone-400 line-through">ปกติ ฿390</span>
+                                </div>
+                            </div>
+                            <p class="text-stone-600 text-sm mt-3 leading-relaxed">
+                                ผสานคุณค่าจาก <strong>ขิงแก่ อัญชัน และโสมเกาหลี</strong> ช่วยกระตุ้นการไหลเวียนโลหิตใต้หนังศีรษะ ลดการหลุดร่วงของเส้นผม เสริมสร้างรากผมเกิดใหม่ให้แข็งแรงและดกดำเงางาม
+                            </p>
+                            <ul class="mt-4 space-y-2 text-sm text-stone-700">
+                                <li class="flex items-center gap-2">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+                                    <span>ลดผมร่วงสะสมชัดเจนภายใน 2 สัปดาห์</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+                                    <span>กระตุ้นลูกผมเกิดใหม่ ผมดูหนาขึ้น</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <button onclick="selectProductAndScroll('SKU-001')" class="mt-6 w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition flex items-center justify-center gap-2 shadow-sm">
+                            <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                            <span>เลือกสั่งซื้อสูตรนี้ (SKU-001)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SKU 2 Card -->
+                <div class="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-sm hover:shadow-xl transition flex flex-col">
+                    <div class="relative bg-sky-50 h-72 flex items-center justify-center p-6">
+                        <span class="absolute top-4 left-4 bg-sky-700 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                            รหัสสินค้า: SKU-002
+                        </span>
+                        <span class="absolute top-4 right-4 bg-teal-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                            สูตรเย็นสดชื่น
+                        </span>
+                        <img src="./images/sku2.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/400x400/0284c7/ffffff?text=HERBAVITA+SKU-002%0A%E0%B8%AA%E0%B8%B9%E0%B8%95%E0%B8%A3%E0%B8%82%E0%B8%88%E0%B8%B1%E0%B8%94%E0%B8%A3%E0%B8%B1%E0%B8%87%E0%B9%81%E0%B8%84+%E0%B9%80%E0%B8%A2%E0%B9%87%E0%B8%99%E0%B8%AA%E0%B8%94%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%99';" 
+                             alt="SKU-002 แชมพูสูตรขจัดรังแค" 
+                             class="h-full w-auto object-contain rounded-2xl shadow-md">
+                    </div>
+                    <div class="p-6 sm:p-8 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start gap-2">
+                                <h3 class="text-xl font-bold text-stone-900">สูตรขจัดรังแค & คุมมันเย็นสดชื่น</h3>
+                                <div class="text-right">
+                                    <span class="text-2xl font-bold text-sky-700">฿290</span>
+                                    <span class="block text-xs text-stone-400 line-through">ปกติ ฿390</span>
+                                </div>
+                            </div>
+                            <p class="text-stone-600 text-sm mt-3 leading-relaxed">
+                                อุดมด้วยสารสกัดจาก <strong>มะกรูด ทีทรีออยล์ และเปปเปอร์มินต์</strong> ช่วยขจัดรังแคและอาการคันหนังศีรษะอย่างอ่อนโยน ควบคุมความมันส่วนเกิน ให้ความรู้สึกเย็นสบายเบาศีรษะตลอดวัน
+                            </p>
+                            <ul class="mt-4 space-y-2 text-sm text-stone-700">
+                                <li class="flex items-center gap-2">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-sky-600 shrink-0"></i>
+                                    <span>ขจัดรังแค ลดอาการคันและกลิ่นอับหนังศีรษะ</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-sky-600 shrink-0"></i>
+                                    <span>ผมนุ่มสลวย ไม่พันกัน คุมมันยาวนาน 24 ชม.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <button onclick="selectProductAndScroll('SKU-002')" class="mt-6 w-full py-3 px-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold transition flex items-center justify-center gap-2 shadow-sm">
+                            <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                            <span>เลือกสั่งซื้อสูตรนี้ (SKU-002)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Order Form Section -->
+        <section id="order-form" class="py-16 bg-emerald-950 text-white">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white text-stone-800 rounded-3xl p-6 sm:p-10 shadow-2xl">
+                    <div class="text-center mb-8">
+                        <span class="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold mb-2">
+                            โปรโมชั่นพิเศษวันนี้ ส่งฟรีทั่วประเทศ!
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-stone-900">แบบฟอร์มสั่งซื้อสินค้า</h2>
+                        <p class="text-stone-500 text-sm mt-1">กรอกข้อมูลด้านล่าง ระบบจะบันทึกคำสั่งซื้อไปยังฐานข้อมูล Google Sheet ทันที</p>
+                    </div>
+
+                    <form id="checkoutForm" onsubmit="handleOrderSubmit(event)" class="space-y-6">
+                        <!-- ส่วนเลือกจำนวนสินค้าแต่ละ SKU -->
+                        <div class="bg-stone-50 p-4 sm:p-6 rounded-2xl border border-stone-200 space-y-4">
+                            <h3 class="font-semibold text-stone-900 flex items-center gap-2">
+                                <i data-lucide="shopping-bag" class="w-5 h-5 text-emerald-600"></i>
+                                <span>1. เลือกสินค้าและจำนวนที่ต้องการ</span>
+                            </h3>
+
+                            <!-- รายการ SKU-001 -->
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-stone-200">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center shrink-0">
+                                        SKU-001
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-stone-900">แชมพูสูตรลดผมขาดร่วง & บำรุงรากผม</p>
+                                        <p class="text-sm text-emerald-700 font-medium">ราคา 290 บาท / ขวด</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 self-end sm:self-center">
+                                    <button type="button" onclick="updateQty('qty1', -1)" class="w-9 h-9 rounded-lg bg-stone-100 hover:bg-stone-200 font-bold text-lg flex items-center justify-center">-</button>
+                                    <input type="number" id="qty1" value="1" min="0" max="50" readonly class="w-12 text-center font-bold text-lg bg-transparent">
+                                    <button type="button" onclick="updateQty('qty1', 1)" class="w-9 h-9 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold text-lg flex items-center justify-center">+</button>
+                                </div>
+                            </div>
+
+                            <!-- รายการ SKU-002 -->
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-stone-200">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-lg bg-sky-100 text-sky-800 font-bold text-xs flex items-center justify-center shrink-0">
+                                        SKU-002
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-stone-900">แชมพูสูตรขจัดรังแค & คุมมันเย็นสดชื่น</p>
+                                        <p class="text-sm text-sky-700 font-medium">ราคา 290 บาท / ขวด</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 self-end sm:self-center">
+                                    <button type="button" onclick="updateQty('qty2', -1)" class="w-9 h-9 rounded-lg bg-stone-100 hover:bg-stone-200 font-bold text-lg flex items-center justify-center">-</button>
+                                    <input type="number" id="qty2" value="0" min="0" max="50" readonly class="w-12 text-center font-bold text-lg bg-transparent">
+                                    <button type="button" onclick="updateQty('qty2', 1)" class="w-9 h-9 rounded-lg bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold text-lg flex items-center justify-center">+</button>
+                                </div>
+                            </div>
+
+                            <!-- สรุปยอดรวม -->
+                            <div class="flex justify-between items-center pt-2 border-t border-stone-200">
+                                <span class="font-medium text-stone-600">ยอดชำระสุทธิ (ฟรีค่าจัดส่ง):</span>
+                                <span id="total-price-display" class="text-2xl font-bold text-emerald-700">290 บาท</span>
+                            </div>
+                        </div>
+
+                        <!-- ข้อมูลผู้รับพัสดุ -->
+                        <div class="space-y-4">
+                            <h3 class="font-semibold text-stone-900 flex items-center gap-2">
+                                <i data-lucide="map-pin" class="w-5 h-5 text-emerald-600"></i>
+                                <span>2. ข้อมูลสำหรับจัดส่งพัสดุ</span>
+                            </h3>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-stone-700 mb-1">ชื่อ - นามสกุล ผู้รับ <span class="text-red-500">*</span></label>
+                                    <input type="text" id="custName" required placeholder="เช่น สมชาย ใจดี" class="w-full px-4 py-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-stone-700 mb-1">เบอร์โทรศัพท์ติดต่อ <span class="text-red-500">*</span></label>
+                                    <input type="tel" id="custPhone" required placeholder="เช่น 081-234-5678" class="w-full px-4 py-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-stone-700 mb-1">ที่อยู่จัดส่งโดยละเอียด (บ้านเลขที่, ซอย, ถนน, ตำบล/แขวง, อำเภอ/เขต, จังหวัด, รหัสไปรษณีย์) <span class="text-red-500">*</span></label>
+                                <textarea id="custAddress" rows="3" required placeholder="เช่น 99/12 หมู่บ้านสุขใจ ถ.พหลโยธิน แขวงเสนานิคม เขตจตุจักร กรุงเทพฯ 10900" class="w-full px-4 py-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-stone-700 mb-1">ช่องทางการชำระเงิน</label>
+                                <select id="paymentMethod" class="w-full px-4 py-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white">
+                                    <option value="เก็บเงินปลายทาง (COD)">เก็บเงินปลายทาง (COD - ชำระเมื่อรับสินค้า)</option>
+                                    <option value="โอนชำระผ่านธนาคาร / พร้อมเพย์">โอนชำระผ่านธนาคาร / พร้อมเพย์</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="w-full py-4 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-lg shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2">
+                            <i data-lucide="check-circle" class="w-5 h-5"></i>
+                            <span>ยืนยันการสั่งซื้อสินค้า</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===================================================================== -->
+    <!-- ส่วนที่ 2: ระบบหลังบ้าน (FULFILLMENT, PICKING, PACKING & SHIPPING LABEL) -->
+    <!-- ===================================================================== -->
+    <section id="view-admin" class="hidden py-8 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 no-print">
+        <!-- แถบหัวข้อและตั้งค่า Google Sheet -->
+        <div class="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm mb-6">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-stone-900 flex items-center gap-2">
+                        <i data-lucide="boxes" class="w-6 h-6 text-emerald-600"></i>
+                        <span>ระบบจัดการคำสั่งซื้อ หยิบ-แพ็คสินค้า และใบจ่าหน้าพัสดุ</span>
+                    </h1>
+                    <p class="text-sm text-stone-500 mt-1">ดึงข้อมูลจากฐานข้อมูลเพื่อจัดเตรียมสินค้าตาม SKU และพิมพ์ใบจ่าหน้าจัดส่งลูกค้า</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="toggleConfigModal()" class="px-4 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-sm font-medium flex items-center gap-1.5 border border-stone-300">
+                        <i data-lucide="settings" class="w-4 h-4 text-emerald-700"></i>
+                        <span>ตั้งค่าเชื่อมต่อ Google Sheet</span>
+                    </button>
+                    <button onclick="syncFromGoogleSheet()" class="px-4 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-sm font-medium flex items-center gap-1.5 border border-emerald-200">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                        <span>ซิงค์ข้อมูลล่าสุด</span>
+                    </button>
+                    <button onclick="exportToCSV()" class="px-4 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 text-sm font-medium flex items-center gap-1.5 border border-amber-200">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>ส่งออก CSV</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- สถานะการเชื่อมต่อ Google Sheet -->
+            <div class="mt-4 pt-4 border-t border-stone-100 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div class="flex items-center gap-2">
+                    <span class="font-medium text-stone-600">สถานะ Google Sheet API:</span>
+                    <span id="gs-status-badge" class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-medium">
+                        โหมดจำลองในเครื่อง (Local Storage) - พร้อมใช้งานทันที
+                    </span>
+                </div>
+                <button onclick="addDemoOrder()" class="text-emerald-700 hover:underline font-medium">
+                    + สร้างออเดอร์ตัวอย่างเพื่อทดสอบแพ็คของ
+                </button>
+            </div>
+        </div>
+
+        <!-- สรุปใบหยิบสินค้ารวม (Pick List Summary) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium text-stone-500">คำสั่งซื้อทั้งหมด</p>
+                    <p id="stat-total-orders" class="text-2xl font-bold text-stone-900 mt-1">0 ออเดอร์</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-stone-100 flex items-center justify-center text-stone-700">
+                    <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+                </div>
+            </div>
+            <div class="bg-emerald-50 p-5 rounded-2xl border border-emerald-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-emerald-800">ต้องหยิบ SKU-001 (ลดผมร่วง)</p>
+                    <p id="stat-pick-sku1" class="text-2xl font-bold text-emerald-900 mt-1">0 ขวด</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">
+                    SKU-001
+                </div>
+            </div>
+            <div class="bg-sky-50 p-5 rounded-2xl border border-sky-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-sky-800">ต้องหยิบ SKU-002 (ขจัดรังแค)</p>
+                    <p id="stat-pick-sku2" class="text-2xl font-bold text-sky-900 mt-1">0 ขวด</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-sky-600 text-white flex items-center justify-center font-bold text-xs">
+                    SKU-002
+                </div>
+            </div>
+        </div>
+
+        <!-- รายการคำสั่งซื้อสำหรับ หยิบ -> แพ็ค -> พิมพ์ใบจ่าหน้า -->
+        <div class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+            <div class="p-5 border-b border-stone-200 flex justify-between items-center">
+                <h2 class="font-bold text-stone-900">รายการคำสั่งซื้อรอจัดส่ง (Order Fulfillment Queue)</h2>
+                <span class="text-xs text-stone-500">ตรวจสอบรายการหยิบสินค้าและกดพิมพ์ใบจ่าหน้าพัสดุ</span>
+            </div>
+
+            <div id="orders-list-container" class="divide-y divide-stone-200">
+                <!-- รายการออเดอร์จะถูก Render ด้วย JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL: ตั้งค่า GOOGLE SHEETS & APPS SCRIPT CODE -->
+    <!-- ===================================================================== -->
+    <div id="config-modal" class="hidden fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl">
+            <div class="flex justify-between items-center pb-4 border-b border-stone-200">
+                <h3 class="text-xl font-bold text-stone-900 flex items-center gap-2">
+                    <i data-lucide="database" class="w-5 h-5 text-emerald-600"></i>
+                    <span>เชื่อมต่อ Google Sheet (Apps Script Web App)</span>
+                </h3>
+                <button onclick="toggleConfigModal()" class="p-2 rounded-lg hover:bg-stone-100 text-stone-500">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="mt-4 space-y-4 text-sm">
+                <div>
+                    <label class="block font-semibold text-stone-800 mb-1">Google Apps Script Web App URL:</label>
+                    <input type="url" id="gsUrlInput" placeholder="https://script.google.com/macros/s/AKfycb.../exec" class="w-full px-4 py-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-500 outline-none">
+                    <p class="text-xs text-stone-500 mt-1">* หากเว้นว่างไว้ ระบบจะบันทึกและดึงข้อมูลจาก Local Storage ของเบราว์เซอร์อัตโนมัติ</p>
+                </div>
+
+                <div class="flex gap-2">
+                    <button onclick="saveGoogleSheetUrl()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
+                        บันทึกการเชื่อมต่อ
+                    </button>
+                    <button onclick="clearGoogleSheetUrl()" class="px-4 py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium">
+                        ล้างค่า URL
+                    </button>
+                </div>
+
+                <!-- คู่มือและโค้ด Apps Script สำหรับคัดลอกไปวางใน Google Sheet -->
+                <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 mt-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-bold text-stone-800">โค้ด Google Apps Script (คัดลอกไปวางใน Google Sheet > ส่วนขยาย > Apps Script):</span>
+                        <button onclick="copyAppsScriptCode()" class="px-3 py-1 rounded-lg bg-stone-800 text-white text-xs hover:bg-stone-700 flex items-center gap-1">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            <span>คัดลอกโค้ด</span>
+                        </button>
+                    </div>
+                    <pre id="apps-script-code" class="bg-stone-900 text-emerald-300 p-3 rounded-xl text-xs overflow-x-auto leading-relaxed">function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(["OrderID", "Timestamp", "CustomerName", "Phone", "Address", "SKU001_Qty", "SKU002_Qty", "TotalPrice", "Payment", "Status"]);
+  }
+  
+  sheet.appendRow([
+    data.orderId,
+    data.timestamp,
+    data.name,
+    "'" + data.phone,
+    data.address,
+    data.sku1,
+    data.sku2,
+    data.total,
+    data.payment,
+    data.status || "รอดำเนินการ"
+  ]);
+  
+  return ContentService.createTextOutput(JSON.stringify({result: "success"})).setMimeType(ContentService.MimeType.JSON);
+}
+
+function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var rows = sheet.getDataRange().getValues();
+  var orders = [];
+  for (var i = 1; i < rows.length; i++) {
+    orders.push({
+      orderId: rows[i][0],
+      timestamp: rows[i][1],
+      name: rows[i][2],
+      phone: String(rows[i][3]).replace(/^'/, ''),
+      address: rows[i][4],
+      sku1: Number(rows[i][5]) || 0,
+      sku2: Number(rows[i][6]) || 0,
+      total: Number(rows[i][7]) || 0,
+      payment: rows[i][8],
+      status: rows[i][9] || "รอดำเนินการ"
+    });
+  }
+  return ContentService.createTextOutput(JSON.stringify(orders)).setMimeType(ContentService.MimeType.JSON);
+}</pre>
+                    <p class="text-xs text-stone-600 mt-2">
+                        วิธี Deploy: กดปุ่ม <strong>ทำให้ใช้งานได้ (Deploy) > การทำให้ใช้งานได้รายการใหม่ > ประเภท: เว็บแอป > ผู้ที่มีสิทธิ์เข้าถึง: ทุกคน (Anyone)</strong> แล้วนำ URL มาวางด้านบน
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL & PRINT AREA: ใบจ่าหน้าพัสดุและใบหยิบสินค้า (SHIPPING LABEL) -->
+    <!-- ===================================================================== -->
+    <div id="label-modal" class="hidden fixed inset-0 z-50 bg-stone-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl">
+            <div class="flex justify-between items-center pb-3 border-b border-stone-200 no-print">
+                <h3 class="font-bold text-lg text-stone-900">ตัวอย่างใบจ่าหน้าพัสดุ (Shipping Label)</h3>
+                <button onclick="closeLabelModal()" class="p-2 rounded-lg hover:bg-stone-100 text-stone-500">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- พื้นที่ใบจ่าหน้าพัสดุสำหรับสั่งพิมพ์ -->
+            <div id="print-area" class="my-4 border-2 border-stone-900 rounded-xl p-5 bg-white text-stone-900">
+                <div class="flex justify-between items-start border-b-2 border-stone-900 pb-3">
+                    <div>
+                        <p class="font-bold text-lg tracking-wider">HERBAVITA THAILAND</p>
+                        <p class="text-xs">ผู้ส่ง: ร้านเฮอร์บาไวต้า 88/9 ถ.พหลโยธิน จตุจักร กทม. 10900</p>
+                        <p class="text-xs">โทร: 02-999-8888</p>
+                    </div>
+                    <div class="text-right">
+                        <span id="lbl-order-id" class="inline-block bg-stone-900 text-white font-mono text-xs font-bold px-2.5 py-1 rounded">ORD-0000</span>
+                        <p id="lbl-date" class="text-[11px] text-stone-600 mt-1">วันที่: -</p>
+                    </div>
+                </div>
+
+                <!-- ข้อมูลผู้รับ -->
+                <div class="py-4 border-b-2 border-dashed border-stone-400">
+                    <p class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-1">กรุณาส่ง (ผู้รับพัสดุ):</p>
+                    <p id="lbl-cust-name" class="text-xl font-bold text-stone-900">ชื่อลูกค้า</p>
+                    <p id="lbl-cust-phone" class="text-base font-semibold text-stone-800 mt-0.5">โทร: 08X-XXX-XXXX</p>
+                    <p id="lbl-cust-address" class="text-sm text-stone-800 mt-2 leading-relaxed">ที่อยู่จัดส่ง...</p>
+                </div>
+
+                <!-- รายการสินค้าสำหรับพนักงานหยิบและแพ็คลงกล่อง -->
+                <div class="py-3 bg-stone-50 px-3 rounded-lg mt-3 border border-stone-300">
+                    <p class="text-xs font-bold text-stone-700 mb-1.5 flex items-center justify-between">
+                        <span>รายการสินค้าในกล่อง (Packing List):</span>
+                        <span id="lbl-payment" class="text-xs font-bold underline">COD</span>
+                    </p>
+                    <div id="lbl-items" class="text-sm space-y-1 font-medium">
+                        <!-- รายการ SKU -->
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-stone-300 flex justify-between font-bold text-sm">
+                        <span>ยอดเรียกเก็บปลายทาง / มูลค่ารวม:</span>
+                        <span id="lbl-total">0 บาท</span>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-center text-[11px] text-stone-500">
+                    *** กรุณาถ่ายวิดีโอขณะเปิดกล่องพัสดุเพื่อใช้เป็นหลักฐานในการเคลมสินค้า ***
+                </div>
+            </div>
+
+            <div class="flex gap-3 justify-end no-print">
+                <button onclick="closeLabelModal()" class="px-4 py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium">
+                    ปิดหน้าต่าง
+                </button>
+                <button onclick="window.print()" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold flex items-center gap-2 shadow-sm">
+                    <i data-lucide="printer" class="w-4 h-4"></i>
+                    <span>สั่งพิมพ์ใบจ่าหน้าพัสดุ</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- กล่องแจ้งเตือนแบบ Toast (แทน alert) -->
+    <div id="toast-box" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none no-print">
+        <div class="bg-stone-900 text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 max-w-sm">
+            <i data-lucide="info" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+            <p id="toast-message" class="text-sm font-medium">แจ้งเตือน</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-400 py-8 text-center text-sm no-print">
+        <div class="max-w-6xl mx-auto px-4">
+            <p class="font-semibold text-white">HERBAVITA Natural Hair Care</p>
+            <p class="mt-1 text-xs">ระบบ E-Commerce Landing Page & Order Fulfillment รองรับ Google Sheets และ GitHub + Vercel</p>
+        </div>
+    </footer>
+
+    <!-- ===================================================================== -->
+    <!-- JAVASCRIPT LOGIC -->
+    <!-- ===================================================================== -->
+    <script>
+        // ราคาสินค้าต่อหน่วย
+        const PRICE_SKU1 = 290;
+        const PRICE_SKU2 = 290;
+
+        // Key สำหรับเก็บข้อมูลใน LocalStorage
+        const STORAGE_ORDERS_KEY = 'herbavita_orders_v1';
+        const STORAGE_GS_URL_KEY = 'herbavita_gs_url_v1';
+
+        // ข้อมูลคำสั่งซื้อเริ่มต้น (เพื่อให้ทดสอบระบบหยิบและแพ็คสินค้าได้ทันที)
+        let orders = [];
+
+        // เริ่มต้นทำงานเมื่อโหลดหน้าเว็บ
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            loadGoogleSheetSetting();
+            loadOrders();
+            calculateTotal();
+        });
+
+        // แสดงข้อความแจ้งเตือน Toast แทน alert()
+        function showToast(msg) {
+            const box = document.getElementById('toast-box');
+            const msgEl = document.getElementById('toast-message');
+            msgEl.textContent = msg;
+            box.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                box.classList.add('translate-y-20', 'opacity-0');
+            }, 3500);
+        }
+
+        // สลับแท็บระหว่าง หน้าร้านค้า และ ระบบหลังบ้าน
+        function switchTab(tab) {
+            const storeView = document.getElementById('view-store');
+            const adminView = document.getElementById('view-admin');
+            const btnStore = document.getElementById('btn-tab-store');
+            const btnAdmin = document.getElementById('btn-tab-admin');
+
+            if (tab === 'store') {
+                storeView.classList.remove('hidden');
+                adminView.classList.add('hidden');
+                btnStore.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-white text-emerald-800 shadow-sm";
+                btnAdmin.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all text-stone-600 hover:text-stone-900";
+            } else {
+                storeView.classList.add('hidden');
+                adminView.classList.remove('hidden');
+                btnAdmin.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-white text-emerald-800 shadow-sm";
+                btnStore.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all text-stone-600 hover:text-stone-900";
+                renderAdminDashboard();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // กดปุ่มเลือกสินค้าจาก Card แล้วเลื่อนลงมาที่ฟอร์มสั่งซื้อ
+        function selectProductAndScroll(sku) {
+            const qty1 = document.getElementById('qty1');
+            const qty2 = document.getElementById('qty2');
+            if (sku === 'SKU-001' && parseInt(qty1.value) === 0) {
+                qty1.value = 1;
+            } else if (sku === 'SKU-002' && parseInt(qty2.value) === 0) {
+                qty2.value = 1;
+            }
+            calculateTotal();
+            document.getElementById('order-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // เพิ่ม/ลดจำนวนสินค้าในฟอร์ม
+        function updateQty(inputId, delta) {
+            const input = document.getElementById(inputId);
+            let current = parseInt(input.value) || 0;
+            current = Math.max(0, Math.min(50, current + delta));
+            input.value = current;
+            calculateTotal();
+        }
+
+        // คำนวณราคารวม
+        function calculateTotal() {
+            const q1 = parseInt(document.getElementById('qty1').value) || 0;
+            const q2 = parseInt(document.getElementById('qty2').value) || 0;
+            const total = (q1 * PRICE_SKU1) + (q2 * PRICE_SKU2);
+            document.getElementById('total-price-display').textContent = total.toLocaleString() + ' บาท';
+            return total;
+        }
+
+        // โหลดการตั้งค่า Google Sheet URL
+        function loadGoogleSheetSetting() {
+            const savedUrl = localStorage.getItem(STORAGE_GS_URL_KEY) || '';
+            document.getElementById('gsUrlInput').value = savedUrl;
+            updateGsStatusBadge(savedUrl);
+        }
+
+        function updateGsStatusBadge(url) {
+            const badge = document.getElementById('gs-status-badge');
+            if (url && url.startsWith('http')) {
+                badge.className = "px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold";
+                badge.textContent = "เชื่อมต่อ Google Sheet API แล้ว";
+            } else {
+                badge.className = "px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-medium";
+                badge.textContent = "โหมดจำลองในเครื่อง (Local Storage) - พร้อมใช้งานทันที";
+            }
+        }
+
+        function toggleConfigModal() {
+            document.getElementById('config-modal').classList.toggle('hidden');
+        }
+
+        function saveGoogleSheetUrl() {
+            const url = document.getElementById('gsUrlInput').value.trim();
+            localStorage.setItem(STORAGE_GS_URL_KEY, url);
+            updateGsStatusBadge(url);
+            toggleConfigModal();
+            showToast('บันทึกการตั้งค่า Google Sheet เรียบร้อยแล้ว');
+            if (url) syncFromGoogleSheet();
+        }
+
+        function clearGoogleSheetUrl() {
+            document.getElementById('gsUrlInput').value = '';
+            localStorage.removeItem(STORAGE_GS_URL_KEY);
+            updateGsStatusBadge('');
+            showToast('ล้างค่า URL และกลับสู่โหมดจำลองในเครื่องแล้ว');
+        }
+
+        function copyAppsScriptCode() {
+            const codeText = document.getElementById('apps-script-code').textContent;
+            const tempInput = document.createElement('textarea');
+            tempInput.value = codeText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast('คัดลอกโค้ด Google Apps Script เรียบร้อยแล้ว');
+        }
+
+        // โหลดรายการคำสั่งซื้อ (จาก LocalStorage และ Google Sheet ถ้ามี)
+        function loadOrders() {
+            const saved = localStorage.getItem(STORAGE_ORDERS_KEY);
+            if (saved) {
+                orders = JSON.parse(saved);
+            } else {
+                // ข้อมูลตัวอย่างเริ่มต้น 1 รายการเพื่อให้เห็นภาพระบบหยิบ/แพ็คทันที
+                orders = [
+                    {
+                        orderId: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
+                        timestamp: new Date().toLocaleString('th-TH'),
+                        name: 'คุณกัญญา รักธรรมชาติ',
+                        phone: '089-456-7890',
+                        address: '123/45 ซ.ลาดพร้าว 71 แขวงสะพานสอง เขตวังทองหลาง กรุงเทพฯ 10310',
+                        sku1: 2,
+                        sku2: 1,
+                        total: 870,
+                        payment: 'เก็บเงินปลายทาง (COD)',
+                        status: 'รอหยิบสินค้า',
+                        picked: false,
+                        packed: false
+                    }
+                ];
+                saveOrdersLocal();
+            }
+            updateOrderBadge();
+            renderAdminDashboard();
+        }
+
+        function saveOrdersLocal() {
+            localStorage.setItem(STORAGE_ORDERS_KEY, JSON.stringify(orders));
+            updateOrderBadge();
+        }
+
+        function updateOrderBadge() {
+            document.getElementById('order-badge').textContent = orders.length;
+        }
+
+        // บันทึกคำสั่งซื้อเมื่อลูกค้ากดยืนยันหน้าเว็บ
+        async function handleOrderSubmit(e) {
+            e.preventDefault();
+            const q1 = parseInt(document.getElementById('qty1').value) || 0;
+            const q2 = parseInt(document.getElementById('qty2').value) || 0;
+
+            if (q1 === 0 && q2 === 0) {
+                showToast('กรุณาเลือกสินค้าอย่างน้อย 1 ขวดก่อนสั่งซื้อ');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>กำลังบันทึกคำสั่งซื้อ...</span>';
+
+            const newOrder = {
+                orderId: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+                timestamp: new Date().toLocaleString('th-TH'),
+                name: document.getElementById('custName').value.trim(),
+                phone: document.getElementById('custPhone').value.trim(),
+                address: document.getElementById('custAddress').value.trim(),
+                sku1: q1,
+                sku2: q2,
+                total: (q1 * PRICE_SKU1) + (q2 * PRICE_SKU2),
+                payment: document.getElementById('paymentMethod').value,
+                status: 'รอหยิบสินค้า',
+                picked: false,
+                packed: false
+            };
+
+            // บันทึกลง LocalStorage เสมอเพื่อความรวดเร็วและไม่สูญหาย
+            orders.unshift(newOrder);
+            saveOrdersLocal();
+
+            // ส่งข้อมูลไปยัง Google Sheet หากตั้งค่า URL ไว้
+            const gsUrl = localStorage.getItem(STORAGE_GS_URL_KEY);
+            if (gsUrl && gsUrl.startsWith('http')) {
+                try {
+                    await fetch(gsUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newOrder)
+                    });
+                    showToast('สั่งซื้อสำเร็จ! บันทึกข้อมูลลง Google Sheet เรียบร้อยแล้ว');
+                } catch (err) {
+                    console.error(err);
+                    showToast('บันทึกคำสั่งซื้อในระบบเรียบร้อยแล้ว');
+                }
+            } else {
+                showToast('สั่งซื้อสำเร็จ! ข้อมูลพร้อมสำหรับหยิบและแพ็คในแท็บหลังบ้าน');
+            }
+
+            // รีเซ็ตฟอร์ม
+            document.getElementById('checkoutForm').reset();
+            document.getElementById('qty1').value = 1;
+            document.getElementById('qty2').value = 0;
+            calculateTotal();
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i><span>ยืนยันการสั่งซื้อสินค้า</span>';
+            lucide.createIcons();
+        }
+
+        // ดึงข้อมูลจาก Google Sheet (GET)
+        async function syncFromGoogleSheet() {
+            const gsUrl = localStorage.getItem(STORAGE_GS_URL_KEY);
+            if (!gsUrl || !gsUrl.startsWith('http')) {
+                showToast('กรุณาใส่ Google Apps Script URL ในปุ่มตั้งค่าก่อนซิงค์');
+                return;
+            }
+            try {
+                showToast('กำลังดึงข้อมูลล่าสุดจาก Google Sheet...');
+                const res = await fetch(gsUrl);
+                const data = await res.json();
+                if (Array.isArray(data) && data.length > 0) {
+                    orders = data.reverse().map(item => ({
+                        ...item,
+                        picked: item.status === 'แพ็คแล้ว / พร้อมส่ง' || item.status === 'จัดส่งแล้ว',
+                        packed: item.status === 'แพ็คแล้ว / พร้อมส่ง' || item.status === 'จัดส่งแล้ว'
+                    }));
+                    saveOrdersLocal();
+                    renderAdminDashboard();
+                    showToast(`ดึงข้อมูลสำเร็จ พบ ${orders.length} คำสั่งซื้อ`);
+                } else {
+                    showToast('ไม่พบข้อมูลใหม่ใน Google Sheet');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('ไม่สามารถดึงข้อมูลได้ โปรดตรวจสอบสิทธิ์ Anyone ของ Web App');
+            }
+        }
+
+        // สร้างออเดอร์ตัวอย่างเพิ่มเติม
+        function addDemoOrder() {
+            const names = ['คุณณัฐพล วงศ์สุวรรณ', 'คุณพิมพ์ชนก ศรีสุข', 'คุณธนกฤต เจริญพร'];
+            const randomName = names[Math.floor(Math.random() * names.length)];
+            const s1 = Math.floor(Math.random() * 3);
+            const s2 = s1 === 0 ? 1 : Math.floor(Math.random() * 2);
+
+            orders.unshift({
+                orderId: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+                timestamp: new Date().toLocaleString('th-TH'),
+                name: randomName,
+                phone: '08' + Math.floor(10000000 + Math.random() * 90000000),
+                address: '45/8 ถ.นิมมานเหมินท์ ต.สุเทพ อ.เมือง จ.เชียงใหม่ 50200',
+                sku1: s1,
+                sku2: s2,
+                total: (s1 + s2) * 290,
+                payment: 'เก็บเงินปลายทาง (COD)',
+                status: 'รอหยิบสินค้า',
+                picked: false,
+                packed: false
+            });
+            saveOrdersLocal();
+            renderAdminDashboard();
+            showToast('เพิ่มออเดอร์ทดสอบเรียบร้อยแล้ว');
+        }
+
+        // แสดงผลหน้าจอระบบหลังบ้าน (Fulfillment Dashboard)
+        function renderAdminDashboard() {
+            const container = document.getElementById('orders-list-container');
+            let totalSku1ToPick = 0;
+            let totalSku2ToPick = 0;
+
+            orders.forEach(o => {
+                if (!o.packed) {
+                    totalSku1ToPick += Number(o.sku1) || 0;
+                    totalSku2ToPick += Number(o.sku2) || 0;
+                }
+            });
+
+            document.getElementById('stat-total-orders').textContent = `${orders.length} ออเดอร์`;
+            document.getElementById('stat-pick-sku1').textContent = `${totalSku1ToPick} ขวด`;
+            document.getElementById('stat-pick-sku2').textContent = `${totalSku2ToPick} ขวด`;
+
+            if (orders.length === 0) {
+                container.innerHTML = `<div class="p-10 text-center text-stone-500">ยังไม่มีรายการคำสั่งซื้อ</div>`;
+                return;
+            }
+
+            container.innerHTML = orders.map((order, index) => {
+                const isPacked = order.packed;
+                return `
+                <div class="p-5 sm:p-6 transition ${isPacked ? 'bg-stone-50/80' : 'bg-white'}">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <!-- ข้อมูลออเดอร์และลูกค้า -->
+                        <div class="space-y-1.5 flex-1">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="font-mono font-bold text-sm px-2.5 py-0.5 rounded-md bg-stone-900 text-white">${order.orderId}</span>
+                                <span class="text-xs text-stone-500">${order.timestamp}</span>
+                                <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${isPacked ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                                    ${isPacked ? 'แพ็คสำเร็จ / พร้อมส่ง' : 'รอหยิบและแพ็คสินค้า'}
+                                </span>
+                            </div>
+                            <p class="font-bold text-stone-900 text-base">${order.name} <span class="font-normal text-stone-600 text-sm">(${order.phone})</span></p>
+                            <p class="text-sm text-stone-600">${order.address}</p>
+
+                            <!-- รายการสินค้าที่ต้องหยิบ (Pick Items) -->
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                ${order.sku1 > 0 ? `
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold">
+                                    <i data-lucide="package" class="w-3.5 h-3.5 text-emerald-600"></i>
+                                    SKU-001 (ลดผมร่วง) x ${order.sku1} ขวด
+                                </span>` : ''}
+                                ${order.sku2 > 0 ? `
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-sky-50 border border-sky-200 text-sky-900 text-xs font-semibold">
+                                    <i data-lucide="package" class="w-3.5 h-3.5 text-sky-600"></i>
+                                    SKU-002 (ขจัดรังแค) x ${order.sku2} ขวด
+                                </span>` : ''}
+                                <span class="inline-flex items-center px-3 py-1 rounded-lg bg-stone-100 text-stone-800 text-xs font-bold">
+                                    รวม ฿${Number(order.total).toLocaleString()} (${order.payment})
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- ปุ่มดำเนินการ: เช็คลิสต์หยิบของ -> แพ็คของ -> พิมพ์ใบจ่าหน้า -->
+                        <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 pt-2 lg:pt-0 border-t lg:border-t-0 border-stone-100">
+                            <label class="flex items-center gap-2 px-3 py-2 rounded-xl border border-stone-200 bg-white cursor-pointer hover:bg-stone-50 text-xs font-medium select-none">
+                                <input type="checkbox" ${order.picked ? 'checked' : ''} onchange="toggleOrderStep(${index}, 'picked')" class="w-4 h-4 accent-emerald-600 rounded">
+                                <span>1. หยิบของครบ</span>
+                            </label>
+
+                            <label class="flex items-center gap-2 px-3 py-2 rounded-xl border border-stone-200 bg-white cursor-pointer hover:bg-stone-50 text-xs font-medium select-none">
+                                <input type="checkbox" ${order.packed ? 'checked' : ''} onchange="toggleOrderStep(${index}, 'packed')" class="w-4 h-4 accent-emerald-600 rounded">
+                                <span>2. แพ็คลงกล่องแล้ว</span>
+                            </label>
+
+                            <button onclick="openShippingLabel(${index})" class="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+                                <i data-lucide="printer" class="w-4 h-4"></i>
+                                <span>พิมพ์ใบจ่าหน้า</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        // อัปเดตสถานะการหยิบและแพ็คสินค้า
+        function toggleOrderStep(index, step) {
+            orders[index][step] = !orders[index][step];
+            if (step === 'packed' && orders[index].packed) {
+                orders[index].picked = true;
+                orders[index].status = 'แพ็คแล้ว / พร้อมส่ง';
+                showToast(`ออเดอร์ ${orders[index].orderId} แพ็คสินค้าเรียบร้อย พร้อมพิมพ์ใบจ่าหน้า`);
+            } else {
+                orders[index].status = 'รอหยิบสินค้า';
+            }
+            saveOrdersLocal();
+            renderAdminDashboard();
+        }
+
+        // เปิดหน้าต่างใบจ่าหน้าพัสดุ
+        function openShippingLabel(index) {
+            const order = orders[index];
+            document.getElementById('lbl-order-id').textContent = order.orderId;
+            document.getElementById('lbl-date').textContent = 'วันที่: ' + order.timestamp;
+            document.getElementById('lbl-cust-name').textContent = order.name;
+            document.getElementById('lbl-cust-phone').textContent = 'โทร: ' + order.phone;
+            document.getElementById('lbl-cust-address').textContent = order.address;
+            document.getElementById('lbl-payment').textContent = order.payment;
+            document.getElementById('lbl-total').textContent = Number(order.total).toLocaleString() + ' บาท';
+
+            let itemsHtml = '';
+            if (order.sku1 > 0) {
+                itemsHtml += `<div>[✓] <strong>SKU-001</strong> : แชมพูสูตรลดผมขาดร่วง & บำรุงรากผม — <strong>จำนวน ${order.sku1} ขวด</strong></div>`;
+            }
+            if (order.sku2 > 0) {
+                itemsHtml += `<div>[✓] <strong>SKU-002</strong> : แชมพูสูตรขจัดรังแค & เย็นสดชื่น — <strong>จำนวน ${order.sku2} ขวด</strong></div>`;
+            }
+            document.getElementById('lbl-items').innerHTML = itemsHtml;
+
+            document.getElementById('label-modal').classList.remove('hidden');
+        }
+
+        function closeLabelModal() {
+            document.getElementById('label-modal').classList.add('hidden');
+        }
+
+        // ส่งออกข้อมูลเป็นไฟล์ CSV
+        function exportToCSV() {
+            if (orders.length === 0) {
+                showToast('ไม่มีข้อมูลคำสั่งซื้อสำหรับส่งออก');
+                return;
+            }
+            const headers = ['OrderID', 'Timestamp', 'CustomerName', 'Phone', 'Address', 'SKU001_Qty', 'SKU002_Qty', 'TotalPrice', 'Payment', 'Status'];
+            const rows = orders.map(o => [
+                o.orderId,
+                `"${o.timestamp}"`,
+                `"${o.name}"`,
+                `"${o.phone}"`,
+                `"${o.address.replace(/"/g, '""')}"`,
+                o.sku1,
+                o.sku2,
+                o.total,
+                `"${o.payment}"`,
+                `"${o.status}"`
+            ]);
+
+            const csvContent = "\uFEFF" + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `herbavita_orders_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('ส่งออกไฟล์ CSV เรียบร้อยแล้ว');
+        }
+    </script>
+</body>
+</html>
